@@ -1,0 +1,15 @@
+﻿# Obsidian 기기별 작업공간
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# Obsidian 휴지통
+.trash/
+
+# 운영체제 임시 파일
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 환경변수와 비밀정보
+.env
+.env.*
