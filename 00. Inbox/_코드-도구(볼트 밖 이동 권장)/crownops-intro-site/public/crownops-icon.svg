@@ -1,0 +1,36 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">CrownOps Icon</title>
+  <desc id="desc">Orange CrownOps app icon with a white dental crown check mark.</desc>
+  <defs>
+    <linearGradient id="iconBg" x1="32" y1="24" x2="162" y2="168" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF4D00"/>
+      <stop offset="0.58" stop-color="#FF7A00"/>
+      <stop offset="1" stop-color="#FFB000"/>
+    </linearGradient>
+  </defs>
+  <rect x="24" y="24" width="144" height="144" rx="34" fill="url(#iconBg)"/>
+  <path
+    d="M61.5 110L56.4 72.8C54.8 61.1 67.5 53.2 77.4 59.7L92.5 69.7C98.8 73.9 107 73.9 113.3 69.7L128.6 59.7C138.4 53.3 151.1 61.2 149.5 72.8L144.4 110"
+    stroke="white"
+    stroke-width="10"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M70 124.5L93.1 137.5C99.2 140.9 106.8 140.9 112.9 137.5L136 124.5"
+    stroke="white"
+    stroke-width="10"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M84 102.5L99.1 118.1L124 89.8"
+    stroke="white"
+    stroke-width="10"
+    stroke-linecap="square"
+    stroke-linejoin="miter"
+  />
+  <circle cx="63" cy="126" r="10" fill="url(#iconBg)" stroke="white" stroke-width="9"/>
+  <circle cx="103" cy="141" r="10" fill="url(#iconBg)" stroke="white" stroke-width="9"/>
+  <circle cx="143" cy="126" r="10" fill="url(#iconBg)" stroke="white" stroke-width="9"/>
+</svg>

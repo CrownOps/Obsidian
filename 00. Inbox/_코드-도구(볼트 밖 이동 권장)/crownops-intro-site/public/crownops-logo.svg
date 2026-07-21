@@ -1,0 +1,53 @@
+<svg width="520" height="150" viewBox="0 0 520 150" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">CrownOps</title>
+  <desc id="desc">Orange gradient CrownOps logo with a dental crown check mark.</desc>
+  <defs>
+    <linearGradient id="crownopsOrange" x1="33" y1="35" x2="492" y2="113" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF7A00"/>
+      <stop offset="0.32" stop-color="#FF4D00"/>
+      <stop offset="0.62" stop-color="#D92D0B"/>
+      <stop offset="0.82" stop-color="#FF6A00"/>
+      <stop offset="1" stop-color="#FFB000"/>
+    </linearGradient>
+    <filter id="softDepth" x="5" y="14" width="150" height="122" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#EA580C" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#softDepth)">
+    <path
+      d="M35.5 88.5L28.8 45.6C26.1 28.3 41.7 15.5 57.2 23.5L95.6 43.4C105.5 48.5 117.2 48.5 127.1 43.4L165.6 23.5C181 15.5 196.6 28.3 193.9 45.6L187.1 88.5"
+      stroke="url(#crownopsOrange)"
+      stroke-width="15"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M59.5 101.2L100.6 123.1C107.3 126.7 115.4 126.7 122.1 123.1L163.1 101.2"
+      stroke="url(#crownopsOrange)"
+      stroke-width="15"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M84 75.8L108.6 101.4L149.2 55.8"
+      stroke="url(#crownopsOrange)"
+      stroke-width="14"
+      stroke-linecap="square"
+      stroke-linejoin="miter"
+    />
+    <circle cx="39" cy="103" r="15.5" fill="white" stroke="url(#crownopsOrange)" stroke-width="13"/>
+    <circle cx="111.5" cy="126.5" r="15.5" fill="white" stroke="url(#crownopsOrange)" stroke-width="13"/>
+    <circle cx="183.8" cy="103" r="15.5" fill="white" stroke="url(#crownopsOrange)" stroke-width="13"/>
+  </g>
+
+  <text
+    x="233"
+    y="99"
+    fill="url(#crownopsOrange)"
+    font-family="Inter, Pretendard, Arial, sans-serif"
+    font-size="66"
+    font-weight="800"
+    letter-spacing="0"
+  >CrownOps</text>
+</svg>

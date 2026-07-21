@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CrownOps — DentalSync 브로슈어</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+  :root{
+    --ink:#26282C; --ink2:#43464B; --muted:#7A7E84; --faint:#A9ADB3;
+    --paper:#FFFFFF; --cream:#FBF8F4; --line:#EAE4DC; --line2:#F2EDE7;
+    --coral:#F4846A; --coral-deep:#EF6A4A; --coral-ink:#C4502F; --coral-bg:#FCEDE7;
+    --dia:#B9BCC1;
+    --go:#1F8A6B; --go-bg:#E3F1EB; --go-ink:#17694F;
+    --ck:#DE9A2B; --ck-bg:#FBF0DB; --ck-ink:#8F6210;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:#E9E5DF;}
+  body{font-family:'Pretendard','Pretendard Variable','Noto Sans CJK KR','Noto Sans KR',-apple-system,'Apple SD Gothic Neo',sans-serif;
+       color:var(--ink);-webkit-font-smoothing:antialiased;word-break:keep-all;
+       -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .mono{font-family:'IBM Plex Mono','Courier New',monospace;}
+  .nb{white-space:nowrap;}
+
+  .note{max-width:270mm;margin:18px auto 4px;padding:0 4px;font-size:12px;color:#55504a;line-height:1.5;}
+  .note b{color:var(--ink);} .note .face{color:var(--coral-deep);font-weight:700;}
+
+  .sheet{width:270mm;height:190mm;margin:8px auto 16px;background:#fff;position:relative;
+         display:grid;grid-template-columns:repeat(3,90mm);gap:0;
+         box-shadow:0 8px 34px rgba(0,0,0,.16);break-after:page;overflow:hidden;}
+  .sheet:last-of-type{break-after:auto;}
+  .panel{width:90mm;height:190mm;position:relative;overflow:hidden;display:flex;flex-direction:column;
+         padding:8mm 6mm 6.5mm;background:var(--paper);}
+  .panel.cream{background:var(--cream);}
+  .fold{position:absolute;top:0;bottom:0;width:0;border-left:1px dashed rgba(30,32,36,.22);z-index:5;pointer-events:none;}
+  .fold.f1{left:90mm;} .fold.f2{left:180mm;}
+
+  /* skeleton */
+  .top{flex:0 0 auto;}
+  .hero{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0;}
+  .foot{flex:0 0 auto;}
+
+  /* head */
+  .phead{display:flex;align-items:center;justify-content:space-between;}
+  .eyebrow{font-size:7.4px;font-weight:800;letter-spacing:.15em;color:var(--coral-deep);text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+  .eyebrow::before{content:"";width:7px;height:7px;background:var(--coral);transform:rotate(45deg);border-radius:2px;}
+  .pidx{font-size:8px;font-weight:800;color:var(--faint);letter-spacing:.05em;}
+  .hrule{height:1px;background:var(--line);margin:6px 0 9px;}
+  .idstrap{font-size:7.2px;font-weight:800;color:var(--ink2);background:#fff;border:1px solid var(--line);
+           border-radius:5px;padding:3px 8px;display:inline-block;margin-bottom:9px;letter-spacing:.01em;}
+  .cream .idstrap{background:#fff;}
+  .panel:not(.cream) .idstrap{background:var(--cream);}
+
+  .h{font-size:19px;font-weight:800;letter-spacing:-.038em;line-height:1.27;color:var(--ink);}
+  .h .o{color:var(--coral-deep);}
+  .lead{font-size:9.6px;font-weight:700;color:var(--ink2);line-height:1.55;margin-top:7px;}
+  .lead b{color:var(--ink);}
+
+  .takeaway{font-size:9px;font-weight:800;color:var(--ink);border-left:3px solid var(--coral);padding-left:10px;line-height:1.45;}
+  .takeaway .o{color:var(--coral-deep);}
+
+  /* diamond bullet */
+  .dnum{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;flex:0 0 17px;
+        background:var(--coral-bg);border-radius:5px;transform:rotate(45deg);margin:2px 3px 0 2px;}
+  .dnum i{transform:rotate(-45deg);font-style:normal;font-size:7.6px;font-weight:800;color:var(--coral-ink);font-family:'IBM Plex Mono',monospace;}
+  .dnum.gray{background:#EDEEF0;} .dnum.gray i{color:#6B6F75;}
+
+  /* status pills */
+  .pill{font-size:7px;font-weight:800;padding:3px 9px;border-radius:999px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;}
+  .pill::before{content:"";width:5px;height:5px;border-radius:50%;}
+  .pill.go{color:var(--go-ink);background:var(--go-bg);} .pill.go::before{background:var(--go);}
+  .pill.ck{color:var(--ck-ink);background:var(--ck-bg);} .pill.ck::before{background:var(--ck);}
+  .pill.re{color:var(--coral-ink);background:var(--coral-bg);} .pill.re::before{background:var(--coral-deep);}
+
+  /* ===== logo (new identity) ===== */
+  .lg-mark{display:inline-block;}
+  .wm{font-weight:800;letter-spacing:-.02em;color:var(--ink);}
+  .wm .o{color:var(--coral);}
+
+  /* ===== ① cover ===== */
+  .cv-top{display:flex;align-items:center;gap:11px;}
+  .cv-word{font-size:24px;}
+  .cv-slogan{font-size:26.5px;font-weight:800;letter-spacing:-.045em;line-height:1.28;color:var(--ink);}
+  .cv-slogan .o{color:var(--coral-deep);}
+  .cv-rule{width:34px;height:3px;background:var(--coral);border-radius:2px;margin:13px 0;}
+  .cv-desc{font-size:9.8px;font-weight:700;color:var(--ink2);line-height:1.6;}
+  .cv-desc b{color:var(--ink);}
+  .cv-qr{display:flex;align-items:center;gap:10px;margin-bottom:13px;}
+  .cv-qr img{width:52px;height:52px;border:1px solid var(--line);border-radius:7px;padding:4px;background:#fff;}
+  .cv-qr .ql{font-size:8px;color:var(--muted);line-height:1.55;font-weight:600;}
+  .cv-qr .ql b{display:block;color:var(--ink);font-weight:800;font-size:8.6px;}
+  .cv-brand{font-size:13.5px;font-weight:800;letter-spacing:-.01em;color:var(--ink);}
+  .cv-brand .o{color:var(--coral);}
+  .cv-brand span.by{font-weight:600;font-size:9px;color:var(--muted);margin-left:5px;}
+  .cv-url{margin-top:4px;font-size:8.4px;color:var(--muted);letter-spacing:.04em;}
+
+  /* ===== ② problem scenes ===== */
+  .scene{display:flex;gap:10px;align-items:flex-start;padding:8px 0;}
+  .scene + .scene{border-top:1px solid var(--line2);}
+  .scene .tx .st{font-size:9.4px;font-weight:800;color:var(--ink);line-height:1.4;}
+  .scene .tx .sd{font-size:8.2px;color:var(--muted);line-height:1.5;margin-top:3px;}
+  .chain{display:flex;flex-wrap:wrap;align-items:center;gap:5px 4px;margin-top:11px;}
+  .chain .s{font-size:7.8px;font-weight:700;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 9px;}
+  .cream .chain .s{background:#fff;}
+  .chain .s.last{color:var(--coral-ink);background:var(--coral-bg);border-color:var(--coral-bg);}
+  .chain .a{font-size:9px;color:var(--coral-deep);font-weight:800;}
+  .quote{margin-top:12px;border-left:3px solid var(--coral);padding:2px 0 2px 11px;}
+  .quote .qt{font-size:9.2px;font-weight:700;color:var(--ink);line-height:1.55;}
+  .quote .qa{font-size:7.4px;color:var(--muted);margin-top:4px;font-weight:600;}
+
+  /* ===== board (flat) ===== */
+  .board{border:1.3px solid var(--line);border-radius:11px;background:#fff;overflow:hidden;}
+  .board .bt{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-bottom:1px solid var(--line2);}
+  .board .bt .tt{font-size:9px;font-weight:800;} .board .bt .td{font-size:7px;color:var(--muted);}
+  .board .bkpi{display:flex;border-bottom:1px solid var(--line);background:var(--cream);}
+  .board .bkpi .k{flex:1;padding:9px 4px;text-align:center;border-right:1px solid var(--line2);}
+  .board .bkpi .k:last-child{border-right:none;}
+  .board .bkpi .kn{font-size:17px;font-weight:800;letter-spacing:-.03em;line-height:1;}
+  .board .bkpi .kl{font-size:6.8px;font-weight:700;color:var(--muted);margin-top:5px;}
+  .board .bkpi .k.nt .kn{color:var(--ink);} .board .bkpi .k.go .kn{color:var(--go);}
+  .board .bkpi .k.ck .kn{color:var(--ck);} .board .bkpi .k.re .kn{color:var(--coral-deep);}
+  .board .bh{display:flex;align-items:center;padding:6px 12px;border-bottom:1px solid var(--line2);}
+  .board .bh span{font-size:6.8px;font-weight:800;letter-spacing:.04em;color:var(--faint);}
+  .board .bh .c1{flex:0 0 32%;} .board .bh .c2{flex:1;} .board .bh .c3{margin-left:auto;}
+  .board .br{display:flex;align-items:center;padding:9.5px 12px;border-bottom:1px solid var(--line2);}
+  .board .br:last-child{border-bottom:none;}
+  .board .cs{flex:0 0 32%;font-size:8.8px;font-weight:800;}
+  .board .cs em{display:block;font-style:normal;font-size:7.2px;font-weight:500;color:var(--muted);margin-top:2px;}
+  .board .wk{flex:1;font-size:8.4px;font-weight:600;color:var(--ink2);}
+  .board .st{margin-left:auto;}
+
+  /* ===== ④ steps + screenshot ===== */
+  .step{display:flex;gap:10px;align-items:flex-start;padding:6.5px 0;}
+  .step + .step{border-top:1px solid var(--line2);}
+  .step .tx .st2{font-size:9.2px;font-weight:800;color:var(--ink);}
+  .step .tx .sd2{font-size:7.9px;color:var(--muted);line-height:1.45;margin-top:2px;}
+  .shot{margin-top:12px;}
+  .shot img{width:100%;display:block;border:1.3px solid var(--line);border-radius:9px;}
+  .shot .cap{margin-top:6px;font-size:7.4px;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:5px;}
+  .shot .cap::before{content:"";width:5px;height:5px;background:var(--coral);transform:rotate(45deg);border-radius:1px;flex:0 0 5px;}
+
+  /* ===== ⑤ effects ===== */
+  .fx{display:flex;flex-direction:column;gap:8px;}
+  .fxrow{display:flex;gap:8px;}
+  .fxcard{flex:1;border:1.3px solid var(--line);border-radius:10px;background:#fff;padding:11px 11px;}
+  .fxcard .fh{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+  .fxcard .ft{font-size:9.4px;font-weight:800;color:var(--ink);letter-spacing:-.01em;line-height:1.3;}
+  .fxcard .fd{font-size:7.9px;color:var(--muted);line-height:1.5;}
+  .fittag{border:1.3px solid var(--coral);border-radius:10px;background:var(--coral-bg);padding:10px 12px;}
+  .fittag .fl{font-size:7px;font-weight:800;letter-spacing:.1em;color:var(--coral-ink);text-transform:uppercase;margin-bottom:5px;}
+  .fittag .fx2{font-size:8.4px;font-weight:700;color:var(--ink);line-height:1.55;} .fittag .fx2 b{color:var(--coral-ink);}
+
+  /* ===== ⑥ closing ===== */
+  .mv{margin-top:2px;}
+  .mvitem{padding:8px 0;border-bottom:1px solid var(--line);}
+  .mvitem:last-child{border-bottom:none;padding-bottom:2px;}
+  .mvlab{font-size:6.8px;font-weight:800;letter-spacing:.14em;color:var(--coral-deep);text-transform:uppercase;margin-bottom:4px;}
+  .mvtx{font-size:8.8px;font-weight:700;color:var(--ink);line-height:1.55;} .mvtx b{color:var(--coral-ink);}
+  .cta{border:1.4px solid var(--coral);border-radius:12px;background:var(--coral-bg);padding:14px 14px;}
+  .cta .ct{font-size:12px;font-weight:800;color:var(--coral-ink);margin-bottom:7px;display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;letter-spacing:-.01em;line-height:1.3;}
+  .cta .ct .tag{font-size:6.6px;font-weight:800;color:#fff;background:var(--coral-deep);border-radius:999px;padding:3px 8px;letter-spacing:.04em;flex:0 0 auto;}
+  .cta .cd{font-size:8.6px;line-height:1.62;color:#6B4638;} .cta .cd b{color:var(--coral-ink);font-weight:800;}
+  .trust{margin-top:10px;padding-top:9px;border-top:1px solid rgba(196,80,47,.25);}
+  .trust .ti{display:flex;align-items:flex-start;gap:7px;padding:2.5px 0;font-size:7.9px;color:#6B4638;font-weight:600;line-height:1.5;}
+  .trust .ti b{color:var(--coral-ink);font-weight:800;}
+  .trust .ti::before{content:"";width:5px;height:5px;background:var(--coral-deep);transform:rotate(45deg);border-radius:1px;flex:0 0 5px;margin-top:4px;}
+  .contact{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px;}
+  .contact .cc{font-size:8.8px;color:var(--ink);line-height:1.8;font-weight:700;} .contact .cc b{color:var(--coral-deep);}
+  .contact img{width:44px;height:44px;border:1px solid var(--line);border-radius:6px;padding:3px;background:#fff;flex:0 0 44px;}
+  .lockup{display:flex;align-items:center;gap:9px;padding-top:10px;border-top:1px solid var(--line);}
+  .lockup .lw .n{font-size:12.5px;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1.1;}
+  .lockup .lw .n .o{color:var(--coral);}
+  .lockup .lw .b{font-size:7px;color:var(--muted);font-weight:600;margin-top:1px;}
+  .copyr{margin-top:7px;font-size:7.2px;color:var(--faint);letter-spacing:.03em;}
+
+  @media print{
+    html,body{background:#fff;}
+    .note,.fold{display:none;}
+    .sheet{margin:0;box-shadow:none;}
+    @page{size:270mm 190mm;margin:0;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="note"><b>인쇄 안내</b> — 용지 <b>270 × 190mm</b> · <span class="face">양면 인쇄(짧은 쪽 넘김)</span> · 배율 100% · 여백 없음 → 출력 후 <b>3단 접기</b>. 점선 접지 가이드는 인쇄 시 자동 숨김. 첫 장=바깥면, 둘째 장=안쪽면.</div>
+
+  <!-- ============ 바깥면: ② 문제 · ⑥ 마무리 · ① 표지 ============ -->
+  <section class="sheet" aria-label="바깥면">
+    <div class="fold f1"></div><div class="fold f2"></div>
+
+    <!-- ② 문제 -->
+    <div class="panel cream">
+      <div class="top">
+        <div class="phead"><div class="eyebrow">Problem</div><div class="pidx">02 / 06</div></div>
+        <div class="hrule"></div>
+        <div class="idstrap">DentalSync · 제작 전 정보 검증</div>
+        <h2 class="h">이런 하루,<br><span class="o">겪고 계시지 않나요?</span></h2>
+        <p class="lead">장비는 디지털인데,<br>제작 전 확인은 여전히 사람의 몫입니다.</p>
+      </div>
+
+      <div class="hero">
+        <div class="scenes">
+          <div class="scene">
+            <span class="dnum"><i>01</i></span>
+            <div class="tx"><div class="st">의뢰는 카톡·이메일·종이·PDF로<br>흩어져 들어옵니다.</div><div class="sd">케이스마다 파일을 사람이 다시 맞춰야 합니다.</div></div>
+          </div>
+          <div class="scene">
+            <span class="dnum"><i>02</i></span>
+            <div class="tx"><div class="st">STL은 왔는데<br>재료·쉐이드 정보는 비어 있습니다.</div><div class="sd">치과에 전화해 하나하나 다시 확인합니다.</div></div>
+          </div>
+          <div class="scene">
+            <span class="dnum"><i>03</i></span>
+            <div class="tx"><div class="st">마지막 확인은<br>소장·숙련자의 눈에 달려 있습니다.</div><div class="sd">사람이 바뀌면 같은 오류가 반복됩니다.</div></div>
+          </div>
+        </div>
+        <div class="chain">
+          <span class="s">정보 분산</span><span class="a">→</span>
+          <span class="s">수작업 확인</span><span class="a">→</span>
+          <span class="s">누락·불일치</span><span class="a">→</span>
+          <span class="s last">재확인·납기 지연</span>
+        </div>
+        <div class="quote">
+          <div class="qt">"새 스캔바디가 들어오면 정보를 알 수 없어<br>치과에 일일이 전화로 확인해야 해요."</div>
+          <div class="qa">— 현장 치기공사 인터뷰 중</div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <div class="takeaway">비어 있는 건 기술이 아니라, <span class="o nb">제작 전 검증</span>입니다.</div>
+      </div>
+    </div>
+
+    <!-- ⑥ 마무리 -->
+    <div class="panel">
+      <div class="top">
+        <div class="phead"><div class="eyebrow">Promise</div><div class="pidx">06 / 06</div></div>
+        <div class="hrule"></div>
+        <div class="idstrap">DentalSync · 제작 전 정보 검증</div>
+        <div class="mv">
+          <div class="mvitem"><div class="mvlab">Mission</div><div class="mvtx">의료 현장에서 실무와 책임을 함께 지는 전문 인력이<br>더 안전하고 효율적으로 일하도록 돕습니다.</div></div>
+          <div class="mvitem"><div class="mvlab">Vision</div><div class="mvtx">DentalSync를 시작으로, 의뢰 기반 업무에서<br><b>정보 불일치와 책임 부담을 줄이는 운영 인프라</b>를 만듭니다.</div></div>
+        </div>
+      </div>
+
+      <div class="hero">
+        <div class="cta">
+          <div class="ct"><span>무료 적용 가능성 확인</span><span class="tag">FREE</span></div>
+          <p class="cd">실제 케이스 <b>10~20건</b>을 비식별로 받아<br><b>작업 가능 · 검증 필요 · 재문의 필요</b>로 분리합니다.<br>도입 부담 없이 현장 쓸모만 확인해 보세요.</p>
+          <div class="trust">
+            <div class="ti"><span><b>보완 레이어</b> — 기존 시스템을 대체하지 않습니다.</span></div>
+            <div class="ti"><span><b>비식별 처리</b> — 환자 개인정보를 수집하지 않습니다.</span></div>
+            <div class="ti"><span><b>무료 진행</b> — 도입 부담이 없습니다.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <div class="contact">
+          <div class="cc"><b>이메일</b>&nbsp; jweumm@gachon.ac.kr<br><b>소개 페이지</b>&nbsp; dentalsyncs.com</div>
+          <img src="qr_site.png" alt="QR">
+        </div>
+        <div class="lockup">
+          <svg class="lg-mark" width="26" height="24" viewBox="0 0 120 110" xmlns="http://www.w3.org/2000/svg">
+            <rect x="49" y="7" width="22" height="22" rx="6" transform="rotate(45 60 18)" fill="#B9BCC1"/>
+            <ellipse cx="43" cy="62" rx="25" ry="39" transform="rotate(-21 43 62)" fill="#F4846A" fill-opacity="0.9"/>
+            <ellipse cx="77" cy="62" rx="25" ry="39" transform="rotate(21 77 62)" fill="#F4846A" fill-opacity="0.9"/>
+          </svg>
+          <div class="lw"><div class="n">Dental<span class="o">Sync</span></div><div class="b">by CrownOps</div></div>
+        </div>
+        <div class="copyr">© CrownOps. All rights reserved.</div>
+      </div>
+    </div>
+
+    <!-- ① 표지 -->
+    <div class="panel">
+      <div class="top">
+        <div class="cv-top">
+          <svg class="lg-mark" width="54" height="50" viewBox="0 0 120 110" xmlns="http://www.w3.org/2000/svg">
+            <rect x="49" y="7" width="22" height="22" rx="6" transform="rotate(45 60 18)" fill="#B9BCC1"/>
+            <ellipse cx="43" cy="62" rx="25" ry="39" transform="rotate(-21 43 62)" fill="#F4846A" fill-opacity="0.9"/>
+            <ellipse cx="77" cy="62" rx="25" ry="39" transform="rotate(21 77 62)" fill="#F4846A" fill-opacity="0.9"/>
+          </svg>
+          <span class="wm cv-word">Crown<span class="o">Ops</span></span>
+        </div>
+      </div>
+
+      <div class="hero">
+        <div>
+          <div class="cv-slogan">디자인 작업 전,<br><span class="o">작업 가능 상태를</span><br>먼저 확인하세요.</div>
+          <div class="cv-rule"></div>
+          <div class="cv-desc"><b>치과기공소 제작 전 정보 검증 서비스</b><br>의뢰서·STL·재료·쉐이드·스캔바디 조건을<br>CAD 디자인 전에 확인합니다.</div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <div class="cv-qr">
+          <img src="qr_site.png" alt="소개 페이지 QR">
+          <div class="ql"><b>소개 페이지</b>QR로 서비스 내용을<br>바로 확인하세요.</div>
+        </div>
+        <div class="cv-brand">Dental<span class="o">Sync</span><span class="by">by CrownOps</span></div>
+        <div class="cv-url">dentalsyncs.com</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 안쪽면: ③ 제품 · ④ 작동 방식 · ⑤ 효과 ============ -->
+  <section class="sheet" aria-label="안쪽면">
+    <div class="fold f1"></div><div class="fold f2"></div>
+
+    <!-- ③ 제품 -->
+    <div class="panel cream">
+      <div class="top">
+        <div class="phead"><div class="eyebrow">Product</div><div class="pidx">03 / 06</div></div>
+        <div class="hrule"></div>
+        <div class="idstrap">치과기공소 · 제작 전 정보 검증</div>
+        <h2 class="h"><span class="o">제작 전 정보 검증</span><br>체크게이트</h2>
+        <p class="lead">디자인 작업을 시작하기 전,<br>지금 작업해도 되는 케이스인지 한 화면에서 확인합니다.</p>
+      </div>
+
+      <div class="hero">
+        <div class="board">
+          <div class="bt"><span class="tt">작업 전 확인 현황</span><span class="td">Review Board · 예시 화면</span></div>
+          <div class="bkpi">
+            <div class="k nt"><div class="kn">6</div><div class="kl">오늘 확인</div></div>
+            <div class="k go"><div class="kn">24</div><div class="kl">작업 가능</div></div>
+            <div class="k ck"><div class="kn">3</div><div class="kl">파일 확인</div></div>
+            <div class="k re"><div class="kn">2</div><div class="kl">재문의</div></div>
+          </div>
+          <div class="bh"><span class="c1">케이스 · 거래처</span><span class="c2">작업 · 검증</span><span class="c3">구분</span></div>
+          <div class="br"><div class="cs mono">케이스 16<em>A치과</em></div><div class="wk">조건 모두 일치</div><div class="st"><span class="pill go">작업 가능</span></div></div>
+          <div class="br"><div class="cs mono">케이스 24<em>B치과</em></div><div class="wk">STL 미도착</div><div class="st"><span class="pill ck">파일 확인</span></div></div>
+          <div class="br"><div class="cs mono">케이스 36<em>분당C치과</em></div><div class="wk">스캔바디 확인</div><div class="st"><span class="pill re">재문의</span></div></div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <div class="takeaway">기존 시스템은 그대로 두고,<br><span class="o">제작 전 검증만 더하는 <span class="nb">보완 레이어</span>.</span></div>
+      </div>
+    </div>
+
+    <!-- ④ 작동 방식 -->
+    <div class="panel">
+      <div class="top">
+        <div class="phead"><div class="eyebrow">How it works</div><div class="pidx">04 / 06</div></div>
+        <div class="hrule"></div>
+        <div class="idstrap">DentalSync · 제작 전 정보 검증</div>
+        <h2 class="h">이렇게 <span class="o">작동합니다.</span></h2>
+        <p class="lead">치과는 기존 방식 그대로 —<br>기공소 화면에서만 조용히 확인합니다.</p>
+      </div>
+
+      <div class="hero">
+        <div class="steps">
+          <div class="step"><span class="dnum gray"><i>01</i></span><div class="tx"><div class="st2">의뢰 수신</div><div class="sd2">종이·PDF·사진 의뢰서를 케이스 데이터로 정리합니다.</div></div></div>
+          <div class="step"><span class="dnum gray"><i>02</i></span><div class="tx"><div class="st2">케이스 정리</div><div class="sd2">케이스 카드로 작업 정보를 한곳에서 관리합니다.</div></div></div>
+          <div class="step"><span class="dnum gray"><i>03</i></span><div class="tx"><div class="st2">파일 매칭</div><div class="sd2">의뢰서와 스캔파일 세트를 맞춰 확인합니다.</div></div></div>
+          <div class="step"><span class="dnum gray"><i>04</i></span><div class="tx"><div class="st2">작업 전 확인</div><div class="sd2">누락·불일치 항목을 작업 전에 표시합니다.</div></div></div>
+          <div class="step"><span class="dnum"><i>05</i></span><div class="tx"><div class="st2">체크게이트</div><div class="sd2">작업 가능 · 검증 필요 · 재문의로 분리합니다.</div></div></div>
+        </div>
+        <div class="shot">
+          <img src="service_screen.png" alt="DentalSync 실제 서비스 화면">
+          <div class="cap">실제 서비스 화면 — 의뢰서 정형화 파이프라인</div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <div class="takeaway">시작은 의뢰서 정리 —<br>도착한 그대로 올리면 <span class="o nb">케이스 데이터</span>가 됩니다.</div>
+      </div>
+    </div>
+
+    <!-- ⑤ 효과 -->
+    <div class="panel cream">
+      <div class="top">
+        <div class="phead"><div class="eyebrow">Effects</div><div class="pidx">05 / 06</div></div>
+        <div class="hrule"></div>
+        <div class="idstrap">DentalSync · 제작 전 정보 검증</div>
+        <h2 class="h">사람이 다시 확인하던<br><span class="o">일을 줄입니다.</span></h2>
+        <p class="lead">제작 전 확인을 한 화면에서 정리해,<br>반복 확인과 재확인을 줄입니다.</p>
+      </div>
+
+      <div class="hero">
+        <div class="fx">
+          <div class="fxrow">
+            <div class="fxcard"><div class="fh"><span class="dnum"><i>01</i></span><div class="ft">확인 전화를<br>줄입니다.</div></div><div class="fd">모든 케이스를 다시 확인하지 않고<br>검증 케이스만 분리합니다.</div></div>
+            <div class="fxcard"><div class="fh"><span class="dnum"><i>02</i></span><div class="ft">작업 전 확인을<br>정리합니다.</div></div><div class="fd">파일과 제작 조건을<br>한 화면에서 확인합니다.</div></div>
+          </div>
+          <div class="fxrow">
+            <div class="fxcard"><div class="fh"><span class="dnum"><i>03</i></span><div class="ft">재확인을<br>줄입니다.</div></div><div class="fd">확인 기준으로<br>작업을 정리합니다.</div></div>
+            <div class="fxcard"><div class="fh"><span class="dnum"><i>04</i></span><div class="ft">파일 누락을<br>줄입니다.</div></div><div class="fd">미도착 파일과 누락 조건을<br>작업 전에 확인합니다.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <div class="fittag">
+          <div class="fl">이런 기공소에 맞습니다</div>
+          <div class="fx2">임플란트·스캔 파일이 많고,<br><b>소장이 모든 케이스를 직접 확인하기 어려운</b> 성장형 디지털 기공소.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
