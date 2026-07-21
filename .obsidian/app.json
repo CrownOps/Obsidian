@@ -1,3 +1,4 @@
 {
-  "promptDelete": true
+  "promptDelete": true,
+  "alwaysUpdateLinks": true
 }
