@@ -1,6 +1,5 @@
-﻿# Obsidian 기기별 작업공간
-.obsidian/workspace.json
-.obsidian/workspace-mobile.json
+﻿# Obsidian 설정 전체
+.obsidian/
 
 # Obsidian 휴지통
 .trash/
